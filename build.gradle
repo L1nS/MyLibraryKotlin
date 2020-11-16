@@ -1,0 +1,25 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+
+    // 注意：以下文件的声明顺序不能乱
+    apply from: 'mvvm-config.gradle'
+    apply from: 'dependencies.gradle'
+    addRepository(repositories) // 这样可以使用 dependencies.gradle 声明好的远程仓库源
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.1.1'
+        // 使用 Kotlin 开发需要 KotlinPlugin
+        classpath Deps.kotlinPlugin
+    }
+}
+
+allprojects {
+    addRepository(repositories)
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

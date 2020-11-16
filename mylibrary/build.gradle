@@ -1,0 +1,93 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+}
+
+android {
+    compileSdkVersion SysConfig.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion SysConfig.minSdkVersion
+        targetSdkVersion SysConfig.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    api 'com.google.android.material:material:1.2.1'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    api 'com.github.imyyq-star:MVVMArch:1.0.6'
+
+    // 内存泄露 LeakCanary
+    api Deps.leakCanary2
+
+    api Deps.lifecycleProcess
+    api Deps.recyclerView
+
+    // room 数据库
+    api Deps.roomRuntime
+    api Deps.roomRxJava2
+    kapt Deps.roomCompiler
+
+    // rx
+    api Deps.rxAndroid2
+    api Deps.rxJava2
+
+    // 网络请求
+    api Deps.retrofit2
+    api Deps.retrofit2RxJava2
+    // JSON 解析
+    api Deps.gson
+    api Deps.gsonConverter
+
+    // glide 图片加载
+    api Deps.glide
+    kapt Deps.glideCompiler
+
+    api Deps.lifecycleJava8
+    //沉浸式实现
+    api Deps.immersionbar
+    //SmartRefresh
+    api Deps.smartRefreshLayout
+    api Deps.smartRefreshHeader
+    //Banner
+    api Deps.bannerViewPager
+    //photoView
+    api Deps.photoView
+    //权限申请
+    api Deps.permissionX
+    //侧滑列表
+    api Deps.sideslipRecyclerView
+    //微信支付
+    api Deps.payWechat
+    //视频播放
+    api Deps.gsyVideoPlayer
+    //流布局
+    api Deps.flowlayout
+
+
+}

@@ -1,0 +1,120 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+// Kotlin 需要增加 kapt plugin 才可以使用 DataBinding
+apply plugin: 'kotlin-kapt'
+
+def keystoreFilepath = ''
+def keystorePSW = ''
+def keystoreAlias = ''
+def keystoreAliasPSW = ''
+// default keystore file, PLZ config file path in local.properties
+def keyfile = file('s.keystore.temp')
+
+Properties properties = new Properties()
+// local.properties file in the root director
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+keystoreFilepath = properties.getProperty("keystore.path")
+
+if (keystoreFilepath) {
+    keystorePSW = properties.getProperty("keystore.password")
+    keystoreAlias = properties.getProperty("keystore.alias")
+    keystoreAliasPSW = properties.getProperty("keystore.alias_password")
+    keyfile = file(keystoreFilepath)
+}
+
+
+android {
+    compileSdkVersion SysConfig.compileSdkVersion
+
+    defaultConfig {
+        applicationId "com.mylibrarykotlin"
+        minSdkVersion SysConfig.minSdkVersion
+        targetSdkVersion SysConfig.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            //APP的build.gradle设置支持的SO库架构
+            abiFilters 'armeabi', 'armeabi-v7a'/*, 'x86'*/
+        }
+    }
+
+    // Gradle Plugin 4.0 及以上,其中 viewBinding 是你有不需要用 DataBinding 的类时，才需要开启，
+    // 不想用 DataBinding，可只继承自 ViewBindingBaseXxxxx 基类
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
+
+    // 开启 Java 8 支持
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "${JavaVersion.VERSION_1_8}"
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    androidExtensions {
+        experimental = true
+    }
+
+    signingConfigs {
+        release {
+            keyAlias keystoreAlias
+            keyPassword keystoreAliasPSW
+            storeFile keyfile
+            storePassword keystorePSW
+        }
+        debug {
+            keyAlias keystoreAlias
+            keyPassword keystoreAliasPSW
+            storeFile keyfile
+            storePassword keystorePSW
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true      //混淆
+            zipAlignEnabled true    //Zipalign优化
+            shrinkResources true    // 移除无用的resource文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false      //混淆
+            //加载默认混淆配置文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+        }
+    }
+
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                outputFileName = "app_demo" + "-" +
+                        buildType.name + "-v" + defaultConfig.versionName + "-" +
+                        defaultConfig.versionCode + ".apk"
+            }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    implementation project(path: ':mylibrary')
+}
