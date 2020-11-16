@@ -83,9 +83,9 @@ dependencies {
     //侧滑列表
     api Deps.sideslipRecyclerView
     //微信支付
-    api Deps.payWechat
+//    api Deps.payWechat
     //视频播放
-    api Deps.gsyVideoPlayer
+//    api Deps.gsyVideoPlayer
     //流布局
     api Deps.flowlayout
 

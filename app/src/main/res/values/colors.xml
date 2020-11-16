@@ -6,6 +6,7 @@
 
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorTheme">#EE9D18</color>
+    <color name="colorLoading">#33A9E1</color>
 
 
     <color name="colorNavTextOff">#919191</color>
