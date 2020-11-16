@@ -70,16 +70,16 @@ android {
 
     signingConfigs {
         release {
-            keyAlias keystoreAlias
-            keyPassword keystoreAliasPSW
-            storeFile keyfile
-            storePassword keystorePSW
+//            keyAlias keystoreAlias
+//            keyPassword keystoreAliasPSW
+//            storeFile keyfile
+//            storePassword keystorePSW
         }
         debug {
-            keyAlias keystoreAlias
-            keyPassword keystoreAliasPSW
-            storeFile keyfile
-            storePassword keystorePSW
+//            keyAlias keystoreAlias
+//            keyPassword keystoreAliasPSW
+//            storeFile keyfile
+//            storePassword keystorePSW
         }
     }
 
