@@ -1,5 +1,8 @@
 package com.mylibrarykotlin.common
 
+import android.app.Activity
+import android.os.Bundle
+import com.imyyq.mvvm.app.AppActivityManager
 import com.imyyq.mvvm.app.BaseApp
 import com.imyyq.mvvm.http.HttpRequest
 import com.mylibrarykotlin.R
@@ -25,6 +28,53 @@ class MyApp : BaseApp() {
         super.onCreate()
         // 网络请求需设置 baseUrl
         HttpRequest.mDefaultBaseUrl = Constants.HTTP_URL
+        registerActivityLifecycleCallbacks(activityLifecycleCallbacks)
+    }
+
+
+    /**
+     * 当前Acitity个数
+     */
+    private var activityAccount = 0
+    companion object{
+        var isForeground = true
+    }
+
+    /**
+     * Activity 生命周期监听，用于监控app前后台状态切换
+     */
+    private var activityLifecycleCallbacks: ActivityLifecycleCallbacks = object : ActivityLifecycleCallbacks {
+        override fun onActivityPaused(activity: Activity) {
+        }
+
+        override fun onActivityStarted(activity: Activity) {
+            activityAccount++
+            isForeground = true
+        }
+
+        override fun onActivityDestroyed(activity: Activity) {
+            AppActivityManager.remove(activity)
+        }
+
+        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+        }
+
+        override fun onActivityStopped(activity: Activity) {
+            activityAccount--
+            if (activityAccount == 0) {
+                isForeground = false
+            }
+        }
+
+        override fun onActivityCreated(
+                activity: Activity,
+                savedInstanceState: Bundle?
+        ) {
+            AppActivityManager.add(activity)
+        }
+
+        override fun onActivityResumed(activity: Activity) {
+        }
 
     }
 

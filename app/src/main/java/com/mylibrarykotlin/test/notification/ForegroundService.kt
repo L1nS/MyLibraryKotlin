@@ -12,6 +12,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.mylibrarykotlin.R
+import com.mylibrarykotlin.common.MyApp
 import kotlinx.coroutines.*
 
 
@@ -145,9 +146,15 @@ class ForegroundService : Service() {
         while (serviceIsLive) {
             builder?.let {
                 second++
-                it.setContentText("通知内容:$second")
+                var tip =""
+                if (MyApp.isForeground){
+                    tip ="前台-通知内容:$second"
+                }else{
+                    tip ="后台-通知内容:$second"
+                }
+                it.setContentText(tip)
                 startForeground(NOTIFICATION_ID, it.build())
-                myCallback?.getData("通知内容:$second")
+                myCallback?.getData(tip)
             }
             delay(2000)
         }
